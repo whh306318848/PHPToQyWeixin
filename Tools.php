@@ -6,7 +6,7 @@
  * @createtime 2015-07-23 02:34:12
  */
 class Tools {
-
+	
 	function __construct($argument = FALSE) {
 
 	}
@@ -14,7 +14,7 @@ class Tools {
 	/**
 	 * 发起http请求
 	 * @param $url 请求的URL
-	 * @param $parameters 请求的参数，以数组形式传递
+	 * @param $parameters 请求的参数
 	 * @param $method 请求的方法，只能是get或post
 	 */
 	public function httpRequest($url, $parameters = NULL, $method = 'get') {
@@ -53,8 +53,8 @@ class Tools {
 				}
 			}
 		}
-		//echo "GET请求的url：" . $url . "<br/>";
-		// 初始化CURL
+			
+		//初始化CURL 
 		$ch = curl_init();
 		// 设置要请求的URL
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -64,6 +64,7 @@ class Tools {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		// 设置本地不检测SSL证书
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 		// 执行请求动作，并获取结果
 		$result = curl_exec($ch);
 		if (!$result) {
@@ -71,7 +72,7 @@ class Tools {
 		}
 		// 关闭CURL
 		curl_close($ch);
-
+		
 		return json_decode($result, TRUE);
 	}
 
@@ -80,11 +81,11 @@ class Tools {
 	 * @param $url 请求的URL
 	 * @param $parameters 请求的参数，以数组形式传递
 	 */
-	private function httpPostRequest($url, $parameters = NULL) {
+	private function httpPostRequest($url, $parameters = array()) {
 		if (empty($url)) {
 			return FALSE;
 		}
-
+		
 		// 初始化CURL
 		$ch = curl_init();
 		// 设置要请求的URL
@@ -95,17 +96,18 @@ class Tools {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		// 设置本地不检测SSL证书
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 		//设置post方式提交
-		curl_setopt($curl, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// 设置请求参数
-		if (!empty($parameters) && is_array($parameters) && count($parameters)) {
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+		if (!empty($parameters)) {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
 		}
 		// 执行请求动作，并获取结果
 		$result = curl_exec($ch);
 		// 关闭CURL
 		curl_close($ch);
-
+		
 		return json_decode($result, TRUE);
 	}
 
