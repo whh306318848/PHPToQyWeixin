@@ -178,7 +178,7 @@ class Department {
 	}
 	
 	/**
-	 * 更新部门
+	 * 删除部门
 	 * @param $id 部门ID
 	 */
 	public function deleteDepartment($id) {
