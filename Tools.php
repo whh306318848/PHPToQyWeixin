@@ -101,7 +101,7 @@ class Tools {
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// 设置请求参数
 		if (!empty($parameters)) {
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parameters, JSON_UNESCAPED_UNICODE));
 		}
 		// 执行请求动作，并获取结果
 		$result = curl_exec($ch);
@@ -151,6 +151,71 @@ class Tools {
 			return $data;
 		}
 	}
-
+	
+	/**
+	 * 保存从网络上获取到的AccessToken
+	 * @param $corpid 企业ID
+	 * @param $corpsecret 管理组的凭证密钥
+	 * @param $token 从网络上获取到的AccessToken
+	 */
+	public function saveAccessToken($corpid, $corpsecret, $token) {
+		if (empty($corpid) || empty($corpsecret) || empty($token)) {
+			return FALSE;
+		}
+		if (!file_exists(dirname( __FILE__ ).'/token.bin')) {
+			file_put_contents(dirname( __FILE__ ).'/token.bin', "");
+		}
+		
+		$result = file_get_contents(dirname( __FILE__ ).'/token.bin');
+		
+		$result = json_decode($result, TRUE);
+		$key = $corpid.$corpsecret;
+		if (empty($result)) {
+			$result = array($key => array($token, time()));
+		}else {
+			$result[] = array($key => array($token, time()));
+		}
+		
+		if (file_put_contents(dirname( __FILE__ ).'/token.bin', json_encode($result))) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
+	
+	/**
+	 * 保存从网络上获取到的AccessToken
+	 * @param $corpid 企业ID
+	 * @param $corpsecret 管理组的凭证密钥
+	 * @return 当前企业ID和管理组的凭证密钥对应的AccessToken，没有则返回false
+	 */
+	public function getAccessToken($corpid, $corpsecret) {
+		if (empty($corpid) || empty($corpsecret)) {
+			return FALSE;
+		}
+		
+		if (!file_exists(dirname( __FILE__ ).'/token.bin')) {
+			return FALSE;
+		}
+		
+		$result = file_get_contents(dirname( __FILE__ ).'/token.bin');
+		if (empty($result)) {
+			return FALSE;
+		}
+		
+		$result = json_decode($result, TRUE);
+		$key = $corpid.$corpsecret;
+		if (isset($result[$key])) {
+			if (time() - 7200 > $result[$key][1]) {
+				// token已超时
+				return FALSE;
+			}else {
+				// token未超时
+				return $result[$key][0];
+			}
+		}else {
+			return FALSE;
+		}
+	}
 }
 ?>

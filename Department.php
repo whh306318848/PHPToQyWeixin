@@ -10,7 +10,7 @@ class Department {
 	private $token;
 	private $tools;
 
-	public function __construct($token = NULL) {
+	public function __construct($token) {
 		$this -> token = $token;
 		$this -> tools = new Tools();
 	}
@@ -123,7 +123,7 @@ class Department {
 			$data['id'] = $id;
 		}
 		
-		$result = $this->tools->httpRequest($url, json_encode($data, JSON_UNESCAPED_UNICODE), 'post');
+		$result = $this->tools->httpRequest($url, $data, 'post');
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;
@@ -162,7 +162,7 @@ class Department {
 			$data['parentid'] = $parentid;
 		}
 		
-		$result = $this->tools->httpRequest($url, json_encode($data, JSON_UNESCAPED_UNICODE), 'post');
+		$result = $this->tools->httpRequest($url, $data, 'post');
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;

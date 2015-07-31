@@ -10,7 +10,7 @@ require_once (dirname(__FILE__) . '/Tools.php');
 class User {
 	private $token;
 	private $tools;
-	public function __construct($token = NULL) {
+	public function __construct($token) {
 		$this -> token = $token;
 		$this -> tools = new Tools();
 	}
@@ -37,7 +37,7 @@ class User {
 	 */
 	public function getUserList($department_id = 1, $fetch_child = 0, $status = 0) {
 		if (intval($department_id) < 1) {
-			return json_encode(array('success'=>FALSE, 'errmsg'=>'Department_id must be greater than Zero!', 'errcode'=>-2, 'userlist'=>array()));
+			return json_encode(array('success'=>FALSE, 'errmsg'=>'Department_id must be greater than zero!', 'errcode'=>-2, 'userlist'=>array()));
 		}
 		
 		$url = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist";
@@ -71,7 +71,7 @@ class User {
 	 */
 	public function getUserListDetails($department_id = 1, $fetch_child = 0, $status = 0) {
 		if (intval($department_id) < 1) {
-			return json_encode(array('success'=>FALSE, 'errmsg'=>'Department_id must be greater than Zero!', 'errcode'=>-2, 'userlist'=>array()));
+			return json_encode(array('success'=>FALSE, 'errmsg'=>'Department_id must be greater than zero!', 'errcode'=>-2, 'userlist'=>array()));
 		}
 		
 		$url = "https://qyapi.weixin.qq.com/cgi-bin/user/list";
@@ -204,7 +204,7 @@ class User {
 			$data['extattr'] = json_encode(array('attrs'=>$temp), JSON_UNESCAPED_UNICODE);
 		}
 		
-		$result = $this->tools->httpRequest($url, json_encode($data, JSON_UNESCAPED_UNICODE), 'post');
+		$result = $this->tools->httpRequest($url, $data, 'post');
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;
@@ -274,7 +274,7 @@ class User {
 			$data['extattr'] = json_encode(array('attrs'=>$temp), JSON_UNESCAPED_UNICODE);
 		}
 		
-		$result = $this->tools->httpRequest($url, json_encode($data, JSON_UNESCAPED_UNICODE), 'post');
+		$result = $this->tools->httpRequest($url, $data, 'post');
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;
@@ -331,7 +331,7 @@ class User {
 		$url = "https://qyapi.weixin.qq.com/cgi-bin/user/batchdelete?access_token={$this->token}";
 		$data = array('useridlist'=>$useridlist);
 		
-		$result = $this->tools->httpRequest($url, json_encode($data, JSON_UNESCAPED_UNICODE), 'post');
+		$result = $this->tools->httpRequest($url, $data, 'post');
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;
@@ -360,7 +360,7 @@ class User {
 		$url = "https://qyapi.weixin.qq.com/cgi-bin/invite/send?access_token={$this->token}";
 		$data = array('userid'=>$userid);
 		
-		$result = $this->tools->httpRequest($url, json_encode($data, JSON_UNESCAPED_UNICODE), 'post');
+		$result = $this->tools->httpRequest($url, $data, 'post');
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;
