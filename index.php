@@ -6,8 +6,8 @@ require_once (dirname( __FILE__ ).'/CreateConnection.php');
 require_once (dirname( __FILE__ ).'/User.php');
 require_once (dirname( __FILE__ ).'/Tag.php');
 
-$corpid = "wx43a11212ca72cdf9";
-$corpsecret = "S3EapOPJqlJJCSBzpUkYDXlG5gch59YyCYu70PvRp1yPx9RUxp6zEW6CeJSv4brK";
+$corpid = "Your weixin's corpid";
+$corpsecret = "Your weixin's corpsecret";
 
 $createConnection = new CreateConnection();
 $token = $createConnection->getAccessToken($corpid, $corpsecret);
