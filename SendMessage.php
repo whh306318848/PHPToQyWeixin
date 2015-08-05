@@ -42,11 +42,11 @@ class SendMessage {
 	 * @param $safe 表示是否是保密消息，0表示否，1表示是，默认0
 	 */
 	public function sendText($agent_id, $content, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
-		if (empty($agent_id) || empty($content)) {
+		if (intval($agent_id) < 0 || empty($content)) {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id or content is empty!', 'errcode' => -2));
 		}
 
-		$data = array('agentid' => $agent_id, 'msgtype' => "text", 'text'=>array('content'=>$content));
+		$data = array('agentid' => $agent_id, 'msgtype' => "text", 'text' => array('content' => $content));
 		if (is_array($to_user)) {
 			$first = TRUE;
 			foreach ($to_user as $value) {
@@ -82,7 +82,7 @@ class SendMessage {
 		if (intval($safe) == 1) {
 			$data['safe'] = 1;
 		}
-		
+
 		$result = $this -> tools -> httpRequest($this -> url, $data, 'post');
 		if ($result) {
 			if ($result['errcode'] == 0) {
@@ -96,7 +96,7 @@ class SendMessage {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Send text fails!', 'errcode' => -2));
 		}
 	}
-	
+
 	/**
 	 * 发送图片
 	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
@@ -107,11 +107,11 @@ class SendMessage {
 	 * @param $safe 表示是否是保密消息，0表示否，1表示是，默认0
 	 */
 	public function sendImage($agent_id, $media_id, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
-		if (empty($agent_id) || empty($media_id)) {
+		if (intval($agent_id) < 0 || empty($media_id)) {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id or media_id is empty!', 'errcode' => -2));
 		}
 
-		$result = $this -> sendImageVoiceFile($agent_id, $media_id, Material::MEDIA_TYPE_IMAGE, $to_user, $to_party, $to_tag, $safe);
+		$result = $this -> sendImageVoiceFileMpnews($agent_id, $media_id, Material::MEDIA_TYPE_IMAGE, $to_user, $to_party, $to_tag, $safe);
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;
@@ -124,7 +124,7 @@ class SendMessage {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Send image fails!', 'errcode' => -2));
 		}
 	}
-	
+
 	/**
 	 * 发送语音
 	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
@@ -135,11 +135,11 @@ class SendMessage {
 	 * @param $safe 表示是否是保密消息，0表示否，1表示是，默认0
 	 */
 	public function sendVoice($agent_id, $media_id, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
-		if (empty($agent_id) || empty($media_id)) {
+		if (intval($agent_id) < 0 || empty($media_id)) {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id or media_id is empty!', 'errcode' => -2));
 		}
 
-		$result = $this -> sendImageVoiceFile($agent_id, $media_id, Material::MEDIA_TYPE_VOICE, $to_user, $to_party, $to_tag, $safe);
+		$result = $this -> sendImageVoiceFileMpnews($agent_id, $media_id, Material::MEDIA_TYPE_VOICE, $to_user, $to_party, $to_tag, $safe);
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;
@@ -154,6 +154,79 @@ class SendMessage {
 	}
 
 	/**
+	 * 发送视频
+	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
+	 * @param $media_id 媒体文件id，可以调用上传临时素材或者永久素材接口获取
+	 * @param $title 视频消息的标题
+	 * @param $description 视频消息的描述
+	 * @param $to_user 成员ID列表，一维数组传递['1', '2', ...]，最多1000个，默认发送给全部成员
+	 * @param $to_party 部门ID列表，一维数组传递['1', '2', ...]，最多1000个
+	 * @param $to_tag 标签ID列表，一维数组传递['1', '2', ...]，最多1000个
+	 * @param $safe 表示是否是保密消息，0表示否，1表示是，默认0
+	 */
+	public function sendVideo($agent_id, $media_id, $title = FALSE, $description = FALSE, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
+		if (intval($agent_id) < 0 || empty($media_id)) {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id or media_id is empty!', 'errcode' => -2));
+		}
+
+		$data = array('agentid' => $agent_id, 'msgtype' => "video", 'video' => array('media_id' => $media_id));
+		if (!empty($title)) {
+			$data['video']['title'] = $title;
+		}
+		if (!empty($description)) {
+			$data['video']['description'] = $description;
+		}
+		if (is_array($to_user)) {
+			$first = TRUE;
+			foreach ($to_user as $value) {
+				if ($first) {
+					$data['touser'] = $value;
+				} else {
+					$data['touser'] .= "|" . $value;
+				}
+			}
+		} else {
+			$data['touser'] = $to_user;
+		}
+		if (!empty($to_party) && is_array($to_party)) {
+			$first = TRUE;
+			foreach ($to_party as $value) {
+				if ($first) {
+					$data['toparty'] = $value;
+				} else {
+					$data['toparty'] .= "|" . $value;
+				}
+			}
+		}
+		if (!empty($to_tag) && is_array($to_tag) && $data['touser'] != "@all") {
+			$first = TRUE;
+			foreach ($to_tag as $value) {
+				if ($first) {
+					$data['totag'] = $value;
+				} else {
+					$data['totag'] .= "|" . $value;
+				}
+			}
+		}
+		if (intval($safe) == 1) {
+			$data['safe'] = 1;
+		}
+
+		$result = $this -> tools -> httpRequest($this -> url, $data, 'post');
+		if ($result) {
+			if ($result['errcode'] == 0) {
+				$result['success'] = TRUE;
+				return json_encode($result);
+			} else {
+				$result['success'] = FALSE;
+				return json_encode($result);
+			}
+		} else {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Send text fails!', 'errcode' => -2));
+		}
+	}
+
+	/**
 	 * 发送文件
 	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
 	 * @param $media_id 媒体文件id，可以调用上传临时素材或者永久素材接口获取
@@ -163,11 +236,11 @@ class SendMessage {
 	 * @param $safe 表示是否是保密消息，0表示否，1表示是，默认0
 	 */
 	public function sendFile($agent_id, $media_id, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
-		if (empty($agent_id) || empty($media_id)) {
+		if (intval($agent_id) < 0 || empty($media_id)) {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id or media_id is empty!', 'errcode' => -2));
 		}
 
-		$result = $this -> sendImageVoiceFile($agent_id, $media_id, Material::MEDIA_TYPE_FILE, $to_user, $to_party, $to_tag, $safe);
+		$result = $this -> sendImageVoiceFileMpnews($agent_id, $media_id, Material::MEDIA_TYPE_FILE, $to_user, $to_party, $to_tag, $safe);
 		if ($result) {
 			if ($result['errcode'] == 0) {
 				$result['success'] = TRUE;
@@ -180,9 +253,169 @@ class SendMessage {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Send file fails!', 'errcode' => -2));
 		}
 	}
+	
+	/**
+	 * 发送news信息
+	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
+	 * @param $articles 图文消息，一个图文消息支持1到10条图文，格式参考微信官方文档：http://qydev.weixin.qq.com/wiki/index.php?title=%E6%B6%88%E6%81%AF%E7%B1%BB%E5%9E%8B%E5%8F%8A%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F
+	 * @param $to_user 成员ID列表，一维数组传递['1', '2', ...]，最多1000个，默认发送给全部成员
+	 * @param $to_party 部门ID列表，一维数组传递['1', '2', ...]，最多1000个
+	 * @param $to_tag 标签ID列表，一维数组传递['1', '2', ...]，最多1000个
+	 */
+	public function sendNews($agent_id, $articles, $to_user = "@all", $to_party = array(), $to_tag = array()) {
+		if (intval($agent_id) < 0) {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id must be greater than zero!', 'errcode' => -2));
+		}
+		if (empty($articles) || !is_array($articles)) {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Articles is invalid!', 'errcode' => -2));
+		} 
+
+		$data = array('agentid' => $agent_id, 'msgtype' => "news", 'news' => array('articles' => $articles));
+		if (is_array($to_user)) {
+			$first = TRUE;
+			foreach ($to_user as $value) {
+				if ($first) {
+					$data['touser'] = $value;
+				} else {
+					$data['touser'] .= "|" . $value;
+				}
+			}
+		} else {
+			$data['touser'] = $to_user;
+		}
+		if (!empty($to_party) && is_array($to_party)) {
+			$first = TRUE;
+			foreach ($to_party as $value) {
+				if ($first) {
+					$data['toparty'] = $value;
+				} else {
+					$data['toparty'] .= "|" . $value;
+				}
+			}
+		}
+		if (!empty($to_tag) && is_array($to_tag) && $data['touser'] != "@all") {
+			$first = TRUE;
+			foreach ($to_tag as $value) {
+				if ($first) {
+					$data['totag'] = $value;
+				} else {
+					$data['totag'] .= "|" . $value;
+				}
+			}
+		}
+
+		$result = $this -> tools -> httpRequest($this -> url, $data, 'post');
+		if ($result) {
+			if ($result['errcode'] == 0) {
+				$result['success'] = TRUE;
+				return json_encode($result);
+			} else {
+				$result['success'] = FALSE;
+				return json_encode($result);
+			}
+		} else {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Send text fails!', 'errcode' => -2));
+		}
+	}
 
 	/**
-	 * 发送图片、文件、音频
+	 * 通过media_id发送图文消息
+	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
+	 * @param $media_id 媒体文件id，可以调用上传临时素材或者永久素材接口获取
+	 * @param $to_user 成员ID列表，一维数组传递['1', '2', ...]，最多1000个，默认发送给全部成员
+	 * @param $to_party 部门ID列表，一维数组传递['1', '2', ...]，最多1000个
+	 * @param $to_tag 标签ID列表，一维数组传递['1', '2', ...]，最多1000个
+	 * @param $safe 表示是否是保密消息，0表示否，1表示是，默认0
+	 */
+	public function sendMpnewsByMediaID($agent_id, $media_id, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
+		if (intval($agent_id) < 0 || empty($media_id)) {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id or media_id is empty!', 'errcode' => -2));
+		}
+
+		$result = $this -> sendImageVoiceFileMpnews($agent_id, $media_id, Material::MEDIA_TYPE_MPNEWS, $to_user, $to_party, $to_tag, $safe);
+		if ($result) {
+			if ($result['errcode'] == 0) {
+				$result['success'] = TRUE;
+				return json_encode($result);
+			} else {
+				$result['success'] = FALSE;
+				return json_encode($result);
+			}
+		} else {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Send mpnews fails!', 'errcode' => -2));
+		}
+	}
+	
+	/**
+	 * 通过图文消息的内容发送图文消息
+	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
+	 * @param $articles 图文消息，一个图文消息支持1到10个图文，格式参考微信官方文档：http://qydev.weixin.qq.com/wiki/index.php?title=%E6%B6%88%E6%81%AF%E7%B1%BB%E5%9E%8B%E5%8F%8A%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F
+	 * @param $to_user 成员ID列表，一维数组传递['1', '2', ...]，最多1000个，默认发送给全部成员
+	 * @param $to_party 部门ID列表，一维数组传递['1', '2', ...]，最多1000个
+	 * @param $to_tag 标签ID列表，一维数组传递['1', '2', ...]，最多1000个
+	 * @param $safe 表示是否是保密消息，0表示否，1表示是，默认0
+	 */
+	public function sendMpnewsByContent($agent_id, $articles, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
+		if (intval($agent_id) < 0) {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id must be greater than zero!', 'errcode' => -2));
+		}
+		if (empty($articles) || !is_array($articles)) {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Articles is invalid!', 'errcode' => -2));
+		} 
+
+		$data = array('agentid' => $agent_id, 'msgtype' => "mpnews", 'mpnews' => array('articles' => $articles));
+		if (is_array($to_user)) {
+			$first = TRUE;
+			foreach ($to_user as $value) {
+				if ($first) {
+					$data['touser'] = $value;
+				} else {
+					$data['touser'] .= "|" . $value;
+				}
+			}
+		} else {
+			$data['touser'] = $to_user;
+		}
+		if (!empty($to_party) && is_array($to_party)) {
+			$first = TRUE;
+			foreach ($to_party as $value) {
+				if ($first) {
+					$data['toparty'] = $value;
+				} else {
+					$data['toparty'] .= "|" . $value;
+				}
+			}
+		}
+		if (!empty($to_tag) && is_array($to_tag) && $data['touser'] != "@all") {
+			$first = TRUE;
+			foreach ($to_tag as $value) {
+				if ($first) {
+					$data['totag'] = $value;
+				} else {
+					$data['totag'] .= "|" . $value;
+				}
+			}
+		}
+		if (intval($safe) == 1) {
+			$data['safe'] = 1;
+		}
+
+		$result = $this -> tools -> httpRequest($this -> url, $data, 'post');
+		if ($result) {
+			if ($result['errcode'] == 0) {
+				$result['success'] = TRUE;
+				return json_encode($result);
+			} else {
+				$result['success'] = FALSE;
+				return json_encode($result);
+			}
+		} else {
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Send text fails!', 'errcode' => -2));
+		}
+	}
+
+	/**
+	 * 发送图片、文件、音频、图文消息
 	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
 	 * @param $media_id 媒体文件id，可以调用上传临时素材或者永久素材接口获取
 	 * @param $msg_type 消息类型，取值范围为Material类中的类常量
@@ -191,8 +424,8 @@ class SendMessage {
 	 * @param $to_tag 标签ID列表，一维数组传递['1', '2', ...]，最多1000个
 	 * @param $safe 表示是否是保密消息，0表示否，1表示是，默认0
 	 */
-	private function sendImageVoiceFile($agent_id, $media_id, $msg_type, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
-		if (empty($agent_id) || empty($media_id) || empty($msg_type)) {
+	private function sendImageVoiceFileMpnews($agent_id, $media_id, $msg_type, $to_user = "@all", $to_party = array(), $to_tag = array(), $safe = 0) {
+		if (intval($agent_id) < 0 || empty($media_id) || empty($msg_type)) {
 			return FALSE;
 		}
 
@@ -206,6 +439,9 @@ class SendMessage {
 				break;
 			case Material::MEDIA_TYPE_VOICE :
 				$data['voice'] = array('media_id' => $media_id);
+				break;
+			case Material::MEDIA_TYPE_MPNEWS:
+				$data['mpnews'] = array('media_id'=> $media_id);
 				break;
 			default :
 				return FALSE;
@@ -247,7 +483,7 @@ class SendMessage {
 		if (intval($safe) == 1) {
 			$data['safe'] = 1;
 		}
-		
+
 		$result = $this -> tools -> httpRequest($this -> url, $data, 'post');
 		return $result;
 	}
