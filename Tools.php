@@ -6,7 +6,7 @@
  * @createtime 2015-07-23 02:34:12
  */
 class Tools {
-	
+
 	function __construct($argument = FALSE) {
 
 	}
@@ -53,8 +53,8 @@ class Tools {
 				}
 			}
 		}
-			
-		//初始化CURL 
+
+		//初始化CURL
 		$ch = curl_init();
 		// 设置要请求的URL
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -67,12 +67,12 @@ class Tools {
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 		// 执行请求动作，并获取结果
 		$result = curl_exec($ch);
-		if (!$result) {
-			//echo curl_error($ch);
+		if ($error = curl_error($ch)) {
+			die($error);
 		}
 		// 关闭CURL
 		curl_close($ch);
-		
+
 		return json_decode($result, TRUE);
 	}
 
@@ -85,7 +85,7 @@ class Tools {
 		if (empty($url)) {
 			return FALSE;
 		}
-		
+
 		// 初始化CURL
 		$ch = curl_init();
 		// 设置要请求的URL
@@ -105,9 +105,33 @@ class Tools {
 		}
 		// 执行请求动作，并获取结果
 		$result = curl_exec($ch);
+		if ($error = curl_error($ch)) {
+			die($error);
+		}
 		// 关闭CURL
 		curl_close($ch);
-		
+
+		return json_decode($result, TRUE);
+	}
+
+	/**
+	 * 使用POST请求上传文件
+	 */
+	public function uploadFileByPost($url, $data) {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		$result = curl_exec($ch);
+		if ($error = curl_error($ch)) {
+			die($error);
+		}
+		curl_close($ch);
+
 		return json_decode($result, TRUE);
 	}
 
@@ -151,7 +175,7 @@ class Tools {
 			return $data;
 		}
 	}
-	
+
 	/**
 	 * 保存从网络上获取到的AccessToken
 	 * @param $corpid 企业ID
@@ -162,27 +186,27 @@ class Tools {
 		if (empty($corpid) || empty($corpsecret) || empty($token)) {
 			return FALSE;
 		}
-		if (!file_exists(dirname( __FILE__ ).'/token.bin')) {
-			file_put_contents(dirname( __FILE__ ).'/token.bin', "");
+		if (!file_exists(dirname(__FILE__) . '/token.bin')) {
+			file_put_contents(dirname(__FILE__) . '/token.bin', "");
 		}
-		
-		$result = file_get_contents(dirname( __FILE__ ).'/token.bin');
-		
+
+		$result = file_get_contents(dirname(__FILE__) . '/token.bin');
+
 		$result = json_decode($result, TRUE);
-		$key = $corpid.$corpsecret;
+		$key = $corpid . $corpsecret;
 		if (empty($result)) {
 			$result = array($key => array($token, time()));
-		}else {
+		} else {
 			$result[] = array($key => array($token, time()));
 		}
-		
-		if (file_put_contents(dirname( __FILE__ ).'/token.bin', json_encode($result))) {
+
+		if (file_put_contents(dirname(__FILE__) . '/token.bin', json_encode($result))) {
 			return TRUE;
-		}else {
+		} else {
 			return FALSE;
 		}
 	}
-	
+
 	/**
 	 * 保存从网络上获取到的AccessToken
 	 * @param $corpid 企业ID
@@ -193,29 +217,30 @@ class Tools {
 		if (empty($corpid) || empty($corpsecret)) {
 			return FALSE;
 		}
-		
-		if (!file_exists(dirname( __FILE__ ).'/token.bin')) {
+
+		if (!file_exists(dirname(__FILE__) . '/token.bin')) {
 			return FALSE;
 		}
-		
-		$result = file_get_contents(dirname( __FILE__ ).'/token.bin');
+
+		$result = file_get_contents(dirname(__FILE__) . '/token.bin');
 		if (empty($result)) {
 			return FALSE;
 		}
-		
+
 		$result = json_decode($result, TRUE);
-		$key = $corpid.$corpsecret;
+		$key = $corpid . $corpsecret;
 		if (isset($result[$key])) {
 			if (time() - 7200 > $result[$key][1]) {
 				// token已超时
 				return FALSE;
-			}else {
+			} else {
 				// token未超时
 				return $result[$key][0];
 			}
-		}else {
+		} else {
 			return FALSE;
 		}
 	}
+
 }
 ?>
