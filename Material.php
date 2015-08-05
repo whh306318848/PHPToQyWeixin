@@ -132,7 +132,7 @@ class Material {
 	 * @return 当素材为图文素材时，返回图文消息的json字符串，当素材为其他素材时，返回带有素材下载地址的json字符串
 	 */
 	public function getPermanentMaterial($media_id, $agent_id) {
-		if (empty($media_id) || empty($agent_id)) {
+		if (empty($media_id) || intval($agent_id) < 0) {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Media_id or agentid is empty!', 'errcode' => -2));
 		}
 
@@ -158,7 +158,7 @@ class Material {
 	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
 	 */
 	public function deletePermanentMaterial($media_id, $agent_id) {
-		if (empty($media_id) || empty($agent_id)) {
+		if (empty($media_id) || intval($agent_id) < 0) {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Media_id or agentid is empty!', 'errcode' => -2));
 		}
 
@@ -183,7 +183,7 @@ class Material {
 	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
 	 */
 	public function getMaterialCount($agent_id) {
-		if (empty($agent_id)) {
+		if (intval($agent_id) < 0) {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Agentid is empty!', 'errcode' => -2));
 		}
 
@@ -211,7 +211,7 @@ class Material {
 	 * @param $count 返回素材的数量，取值在1到50之间
 	 */
 	public function getMaterialList($type, $agent_id, $offset, $count) {
-		if (empty($agent_id) || empty($type)) {
+		if (intval($agent_id) < 0 || empty($type)) {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Agentid or type is empty!', 'errcode' => -2));
 		}
 		if (intval($offset) < 0) {
@@ -237,6 +237,35 @@ class Material {
 			return json_encode(array('success' => FALSE, 'errmsg' => 'Query fails!', 'errcode' => -2));
 		}
 	}
+
+	/**
+	 * 上传永久图文素材
+	 * @param $agent_id 企业应用的id，整型。可在应用的设置页面查看
+	 * @param $articles 图文消息,以二维数组方式，一个图文消息支持1到10个图文，图文消息有特殊结构，比较复杂，在这里不做赘述，可直接参考微信官方文档，网址：http://qydev.weixin.qq.com/wiki/index.php?title=%E4%B8%8A%E4%BC%A0%E6%B0%B8%E4%B9%85%E7%B4%A0%E6%9D%90
+	 */
+	/*
+	 public function uploadPermanentGraphicMaterial($agent_id, $articles = array()) {
+	 if (empty($agent_id) || empty($articles)) {
+	 return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id or articles is empty!', 'errcode' => -2));
+	 }
+
+	 $url = "https://qyapi.weixin.qq.com/cgi-bin/material/add_mpnews?access_token={$this->token}";
+	 $data = array('agentid' => $agent_id, 'mpnews' => array('articles' => $articles));
+	 // echo json_encode($data);exit;
+	 $result = $this -> tools -> httpRequest($url, $data, 'post');
+	 if ($result) {
+	 if ($result['errcode'] == 0) {
+	 $result['success'] = TRUE;
+	 return json_encode($result);
+	 } else {
+	 $result['success'] = FALSE;
+	 return json_encode($result);
+	 }
+	 } else {
+	 return json_encode(array('success' => FALSE, 'errmsg' => 'Upload permanent graphic material fails!', 'errcode' => -2));
+	 }
+	 }*/
+
 }
 
 /* End of file  */
