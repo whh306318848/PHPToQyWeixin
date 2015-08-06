@@ -9,6 +9,7 @@ require_once (dirname(__FILE__) . '/Material.php');
 require_once (dirname(__FILE__) . '/SendMessage.php');
 require_once (dirname(__FILE__) . '/Agent.php');
 require_once (dirname(__FILE__) . '/Menu.php');
+require_once (dirname(__FILE__) . '/Chat.php');
 
 $corpid = "your corpid";
 $corpsecret = "your corpsecret";
@@ -21,7 +22,7 @@ if ($token) {
 	echo "<pre>";
 	//$department = new Department($token);
 	//var_dump($department->getDepartmentList());
-	//var_dump($department->createDepartment("测试部门"));
+	//var_dump($department->createDepartment("合作伙伴"));
 	//var_dump($department->updateDepartment(13, "测试部门3"));
 	//var_dump($department->deleteDepartment(13));
 	//var_dump($department->getDepartmentByID(3));
@@ -30,7 +31,7 @@ if ($token) {
 	//$user = new User($token);
 	//var_dump($user->getUserList(1, 1));
 	//var_dump($user->getUserListDetails(1, 1));
-	//var_dump($user->createUser('ewewew', '测试人员4', 1, FALSE, '44444@126.com'));
+	//var_dump($user->createUser('xxxx', 'xxx', 8, FALSE, 'xxx@qq.com', 'xxxx', FALSE, 1));
 	//var_dump($user->inviteConcern('ewewew'));
 	//var_dump($user->updateUser('ewewew', '测试人员', 1, '程序媛', '19009090808', 2, 'dadadas@112.com', FALSE, 2, FALSE, array('外号'=>'二货')));
 	//var_dump($user->deleteUser('ewewew'));
@@ -50,13 +51,13 @@ if ($token) {
 	//var_dump($tag->deleteTag(3));
 
 	//$material = new Material($token);
-	//var_dump($material->uploadTemporaryMaterial(Material::MEDIA_TYPE_VIDEO, dirname( __FILE__ )."/c.mp4"));
+	//var_dump($material->uploadTemporaryMaterial(Material::MEDIA_TYPE_FILE, dirname( __FILE__ )."/a.txt"));
 	//var_dump($material->getTemporaryMaterial("1I_FViSA9hArOZWzKJ0idhTaGwjbYARNscDwfsESs-wfpeDgOCMAj7Av2VuUvTnt7T5aSf-XoaSlOVDi-_s2lFw"));
 	//var_dump($material->uploadPermanentMaterial(4, Material::MEDIA_TYPE_IMAGE, dirname( __FILE__ )."/b.png"));
 	//var_dump($material->getPermanentMaterial("2_AL2HYxmlBDgDV9UT8uoMWJOC-7hzIKOUZQ8Thcof-Eg8wxT6TkOpnxs1VXOJmqJw_G8xI4QZrJs1L-EB0khsQ", 4));
 	//var_dump($material->deletePermanentMaterial("2_AL2HYxmlBDgDV9UT8uoMWJOC-7hzIKOUZQ8Thcof-Eg8wxT6TkOpnxs1VXOJmqJw_G8xI4QZrJs1L-EB0khsQ", 4));
 	//var_dump($material->getMaterialCount(4));
-	//var_dump($material->getMaterialList(Material::MEDIA_TYPE_VIDEO, 4, 0, 50));
+	//var_dump($material->getMaterialList(Material::MEDIA_TYPE_MPNEWS, 4, 0, 50));
 
 	//$sendMessage = new SendMessage($token);
 	//var_dump($sendMessage->sendFile(4, "1KQuH3LMcYGIj3t0nM-i1wyZMo-TpULxFnkEoYpB2r15Th6P86R5EUnzATFSK_Uq0rB1yPX8IhwOglcqSbhUSgA"));
@@ -67,7 +68,7 @@ if ($token) {
 	//var_dump($sendMessage->sendNews(4, array(array('title'=>'我用爬虫一天时间“偷了”知乎一百万用户，只为证明PHP是世界上最好的语言', 'description'=>'来源： 爱编程', 'url'=>'http://www.w2bc.com/Article/54923'))));
 	//var_dump($sendMessage->sendMpnewsByMediaID(4, "2N53V20kxM_83rjCKTsncW-0WhBLRQsPVxXhtElFyUGXJGSWk0FwKSw-IeV56srH3"));
 	//var_dump($sendMessage->sendMpnewsByContent(4, array(array('title'=>'测试消息1', 'thumb_media_id'=>'271UhK8-pLZ1gy1G5z4ccTUJKPrFn7iFD2GsPk8mt6d5vJTYVANmxHSzF1wkM_qB_C3ggzMKcZhZl-Nmpx0e8QQ', 'author'=>'faith', 'content_source_url'=>'http://www.youarebug.com', 'content'=>'测试消息1', 'digest'=>'测试信息，你信吗？', 'show_cover_pic'=>1), array('title'=>'测试消息2', 'thumb_media_id'=>'271UhK8-pLZ1gy1G5z4ccTUJKPrFn7iFD2GsPk8mt6d5vJTYVANmxHSzF1wkM_qB_C3ggzMKcZhZl-Nmpx0e8QQ', 'author'=>'faith', 'content_source_url'=>'http://www.aiurbia.net', 'content'=>'测试消息2', 'digest'=>'测试信息，你信吗？', 'show_cover_pic'=>1))));
-
+	
 	//$agent = new Agent($token);
 	//var_dump($agent->getAgentByID(4));
 	//var_dump($agent->setAgentByID(4, "测试办公", "测试办公", FALSE, FALSE, 1, 1, 1));
@@ -138,6 +139,16 @@ if ($token) {
 	//var_dump($menu->deleteMenu(4));
 	//var_dump($menu->getMenu(4));
 	
+	//$chat = new Chat($token);
+	//var_dump($chat->createChat("dsdsds", "测试会话1", "xxx", array('ewewew', 'ewewew1')));
+	//var_dump($chat->getChat("dsdsds"));
+	//var_dump($chat->changeChat("dsdsds", "xxx", "测试会话2", "ewewew", array('fuchuan'), array('ewewew1')));
+	//var_dump($chat->changeChat("dsdsds", "ewewew"));
+	//var_dump($chat->clearNotify("wuhaohua", Chat::RECEIVER_TYPE_GROUP, "dsdsds"));
+	//var_dump($chat->sendText(Chat::RECEIVER_TYPE_GROUP, "dsdsds", "xxx", "Hi, everybody/:8-)"));
+	//var_dump($chat->sendImage(Chat::RECEIVER_TYPE_GROUP, "dsdsds", "xxx", "1eqbIpMvqX3FcrROuQJQNqSMlPibmaS0AReH7tySu39Y4g_-mgHXRQQ3-YGf-wWdnRFmGhPoW9HZxBQTltMCHLg"));
+	//var_dump($chat->sendFile(Chat::RECEIVER_TYPE_GROUP, "dsdsds", "xxx", "1n3K1KyX9dEkjxmCqzZY2apU2RZXIXG-eDjQWoxRd27hUHhurPrGFSDj3Qn3Dq-q_74JqawiIQDFQ5XhdRzHvJg"));
+	//var_dump($chat->setMute(array(array('userid'=>'ewewew1', 'status'=>0), array('userid'=>'ewewew', 'status'=>1))));
 
 	echo "</pre>";
 } else {
