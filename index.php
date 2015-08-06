@@ -7,6 +7,7 @@ require_once (dirname(__FILE__) . '/User.php');
 require_once (dirname(__FILE__) . '/Tag.php');
 require_once (dirname(__FILE__) . '/Material.php');
 require_once (dirname(__FILE__) . '/SendMessage.php');
+require_once (dirname(__FILE__) . '/Agent.php');
 
 $corpid = "your corpid";
 $corpsecret = "your corpsecret";
@@ -34,7 +35,7 @@ if ($token) {
 	//var_dump($user->deleteUser('ewewew'));
 	//var_dump($user->batchDeleteUsers(array('ewewew3', 'ewewew4')));
 	//var_dump($user->getUserByID('xxx'));
-	//var_dump($user->getUserByName('faith'));
+	//var_dump($user->getUserByName('xxx'));
 
 	//$tag = new Tag($token);
 	//var_dump($tag->getTagList());
@@ -63,9 +64,15 @@ if ($token) {
 	//var_dump($sendMessage->sendImage(4, "271UhK8-pLZ1gy1G5z4ccTUJKPrFn7iFD2GsPk8mt6d5vJTYVANmxHSzF1wkM_qB_C3ggzMKcZhZl-Nmpx0e8QQ"));
 	//var_dump($sendMessage->sendVoice(4, "2pAg95-1xk2v-GK7veGVhz6Zoe8qZj20bu8ixRV6M9j_mdgrYMF16p0DTdSCOuASo1gjmOcgafj3Gd4LAEfzciw"));
 	//var_dump($sendMessage->sendVideo(0, "2wZarvJL7tZikb27ko-ov2Of7fVcnnIh5ZNJezgl5db-o7e7iWnI4zEvV9-s2xI7Fatc4LZw2pK32hiVNJ75GcA", "测试视频接口", "我就是测试一下视频发送接口"));
-	//var_dump($sendMessage->sendNews(4, array(array('title'=>'测试消息1', 'description'=>'这是测试消息1', 'url'=>'http://www.aiurbia.net', 'picurl'=>'http://www.aiurbia.net/images/yootheme/logo_green.png'), array('title'=>'测试消息2', 'description'=>'这是测试消息2', 'url'=>'http://www.youarebug.com', 'picurl'=>'http://www.youarebug.com/template/sin_lanker/sinkey/logo.png'))));
+	//var_dump($sendMessage->sendNews(0, array(array('title'=>'我用爬虫一天时间“偷了”知乎一百万用户，只为证明PHP是世界上最好的语言', 'description'=>'来源： 爱编程', 'url'=>'http://www.w2bc.com/Article/54923'))));
 	//var_dump($sendMessage->sendMpnewsByMediaID(4, "2N53V20kxM_83rjCKTsncW-0WhBLRQsPVxXhtElFyUGXJGSWk0FwKSw-IeV56srH3"));
 	//var_dump($sendMessage->sendMpnewsByContent(4, array(array('title'=>'测试消息1', 'thumb_media_id'=>'271UhK8-pLZ1gy1G5z4ccTUJKPrFn7iFD2GsPk8mt6d5vJTYVANmxHSzF1wkM_qB_C3ggzMKcZhZl-Nmpx0e8QQ', 'author'=>'faith', 'content_source_url'=>'http://www.youarebug.com', 'content'=>'测试消息1', 'digest'=>'测试信息，你信吗？', 'show_cover_pic'=>1), array('title'=>'测试消息2', 'thumb_media_id'=>'271UhK8-pLZ1gy1G5z4ccTUJKPrFn7iFD2GsPk8mt6d5vJTYVANmxHSzF1wkM_qB_C3ggzMKcZhZl-Nmpx0e8QQ', 'author'=>'faith', 'content_source_url'=>'http://www.aiurbia.net', 'content'=>'测试消息2', 'digest'=>'测试信息，你信吗？', 'show_cover_pic'=>1))));
+	
+	//$agent = new Agent($token);
+	//var_dump($agent->getAgentByID(4));
+	//var_dump($agent->setAgentByID(4, "测试办公", "测试办公", FALSE, FALSE, 1, 1, 1));
+	//var_dump($agent->getAgentList());
+	//var_dump($agent->getAgentByName("测试办公", FALSE));
 
 	echo "</pre>";
 } else {
