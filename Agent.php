@@ -34,7 +34,7 @@ class Agent {
 	 */
 	public function getAgentByID($agent_id) {
 		if (intval($agent_id) < 0) {
-			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id must be greater than zero!', 'errcode' => -2, 'taglist' => array()));
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id must be greater than zero!', 'errcode' => -2));
 		}
 
 		$url = "https://qyapi.weixin.qq.com/cgi-bin/agent/get";
@@ -67,7 +67,7 @@ class Agent {
 	 */
 	public function setAgentByID($agent_id, $name = FALSE, $description = FALSE, $logo_mediaid = FALSE, $redirect_domain = FALSE, $is_reportuser = -1, $is_reportenter = -1, $report_location_flag = -1) {
 		if (intval($agent_id) < 0) {
-			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id must be greater than zero!', 'errcode' => -2, 'taglist' => array()));
+			return json_encode(array('success' => FALSE, 'errmsg' => 'Agent_id must be greater than zero!', 'errcode' => -2));
 		}
 
 		$url = "https://qyapi.weixin.qq.com/cgi-bin/agent/set?access_token={$this->token}";
