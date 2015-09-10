@@ -101,7 +101,7 @@ class Tools {
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// 设置请求参数
 		if (!empty($parameters)) {
-			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parameters, JSON_UNESCAPED_UNICODE));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $this->json_encode_ex($parameters));
 		}
 		// 执行请求动作，并获取结果
 		$result = curl_exec($ch);
@@ -239,6 +239,23 @@ class Tools {
 			}
 		} else {
 			return FALSE;
+		}
+	}
+
+	/**
+	 * 对内容进行json编码，并且保持汉字不会被编码
+	 * @param $value 被编码的对象
+	 * @return 编码结果字符串
+	 */
+	public function json_encode_ex($value) {
+		if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+			$str = json_encode($value);
+			$str = preg_replace_callback("#\\\u([0-9a-f]{4})#i", function($matchs) {
+				return iconv('UCS-2BE', 'UTF-8', pack('H4', $matchs[1]));
+			}, $str);
+			return $str;
+		} else {
+			return json_encode($value, JSON_UNESCAPED_UNICODE);
 		}
 	}
 

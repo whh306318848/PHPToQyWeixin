@@ -201,7 +201,7 @@ class User {
 			foreach ($extattr as $key => $value) {
 				$temp[] = array('name'=>$key, 'value'=>$value);
 			}
-			$data['extattr'] = json_encode(array('attrs'=>$temp), JSON_UNESCAPED_UNICODE);
+			$data['extattr'] = $this->tools->json_encode_ex(array('attrs'=>$temp));
 		}
 		
 		$result = $this->tools->httpRequest($url, $data, 'post');
@@ -271,7 +271,7 @@ class User {
 			foreach ($extattr as $key => $value) {
 				$temp[] = array('name'=>$key, 'value'=>$value);
 			}
-			$data['extattr'] = json_encode(array('attrs'=>$temp), JSON_UNESCAPED_UNICODE);
+			$data['extattr'] = $this->tools->json_encode_ex(array('attrs'=>$temp));
 		}
 		
 		$result = $this->tools->httpRequest($url, $data, 'post');
