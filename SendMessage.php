@@ -47,37 +47,12 @@ class SendMessage {
 		}
 
 		$data = array('agentid' => $agent_id, 'msgtype' => "text", 'text' => array('content' => $content));
-		if (is_array($to_user)) {
-			$first = TRUE;
-			foreach ($to_user as $value) {
-				if ($first) {
-					$data['touser'] = $value;
-				} else {
-					$data['touser'] .= "|" . $value;
-				}
-			}
-		} else {
-			$data['touser'] = $to_user;
+		$data['touser'] = $this->getToUserList($to_user);
+		if (($tmp = $this->getToList($to_party)) != FALSE) {
+			$data['toparty'] = $tmp;
 		}
-		if (!empty($to_party) && is_array($to_party)) {
-			$first = TRUE;
-			foreach ($to_party as $value) {
-				if ($first) {
-					$data['toparty'] = $value;
-				} else {
-					$data['toparty'] .= "|" . $value;
-				}
-			}
-		}
-		if (!empty($to_tag) && is_array($to_tag) && $data['touser'] != "@all") {
-			$first = TRUE;
-			foreach ($to_tag as $value) {
-				if ($first) {
-					$data['totag'] = $value;
-				} else {
-					$data['totag'] .= "|" . $value;
-				}
-			}
+		if (($tmp = $this->getToList($to_tag)) != FALSE) {
+			$data['totag'] = $tmp;
 		}
 		if (intval($safe) == 1) {
 			$data['safe'] = 1;
@@ -176,37 +151,12 @@ class SendMessage {
 		if (!empty($description)) {
 			$data['video']['description'] = $description;
 		}
-		if (is_array($to_user)) {
-			$first = TRUE;
-			foreach ($to_user as $value) {
-				if ($first) {
-					$data['touser'] = $value;
-				} else {
-					$data['touser'] .= "|" . $value;
-				}
-			}
-		} else {
-			$data['touser'] = $to_user;
+		$data['touser'] = $this->getToUserList($to_user);
+		if (($tmp = $this->getToList($to_party)) != FALSE) {
+			$data['toparty'] = $tmp;
 		}
-		if (!empty($to_party) && is_array($to_party)) {
-			$first = TRUE;
-			foreach ($to_party as $value) {
-				if ($first) {
-					$data['toparty'] = $value;
-				} else {
-					$data['toparty'] .= "|" . $value;
-				}
-			}
-		}
-		if (!empty($to_tag) && is_array($to_tag) && $data['touser'] != "@all") {
-			$first = TRUE;
-			foreach ($to_tag as $value) {
-				if ($first) {
-					$data['totag'] = $value;
-				} else {
-					$data['totag'] .= "|" . $value;
-				}
-			}
+		if (($tmp = $this->getToList($to_tag)) != FALSE) {
+			$data['totag'] = $tmp;
 		}
 		if (intval($safe) == 1) {
 			$data['safe'] = 1;
@@ -271,37 +221,12 @@ class SendMessage {
 		} 
 
 		$data = array('agentid' => $agent_id, 'msgtype' => "news", 'news' => array('articles' => $articles));
-		if (is_array($to_user)) {
-			$first = TRUE;
-			foreach ($to_user as $value) {
-				if ($first) {
-					$data['touser'] = $value;
-				} else {
-					$data['touser'] .= "|" . $value;
-				}
-			}
-		} else {
-			$data['touser'] = $to_user;
+		$data['touser'] = $this->getToUserList($to_user);
+		if (($tmp = $this->getToList($to_party)) != FALSE) {
+			$data['toparty'] = $tmp;
 		}
-		if (!empty($to_party) && is_array($to_party)) {
-			$first = TRUE;
-			foreach ($to_party as $value) {
-				if ($first) {
-					$data['toparty'] = $value;
-				} else {
-					$data['toparty'] .= "|" . $value;
-				}
-			}
-		}
-		if (!empty($to_tag) && is_array($to_tag) && $data['touser'] != "@all") {
-			$first = TRUE;
-			foreach ($to_tag as $value) {
-				if ($first) {
-					$data['totag'] = $value;
-				} else {
-					$data['totag'] .= "|" . $value;
-				}
-			}
+		if (($tmp = $this->getToList($to_tag)) != FALSE) {
+			$data['totag'] = $tmp;
 		}
 
 		$result = $this -> tools -> httpRequest($this -> url, $data, 'post');
@@ -364,37 +289,12 @@ class SendMessage {
 		} 
 
 		$data = array('agentid' => $agent_id, 'msgtype' => "mpnews", 'mpnews' => array('articles' => $articles));
-		if (is_array($to_user)) {
-			$first = TRUE;
-			foreach ($to_user as $value) {
-				if ($first) {
-					$data['touser'] = $value;
-				} else {
-					$data['touser'] .= "|" . $value;
-				}
-			}
-		} else {
-			$data['touser'] = $to_user;
+		$data['touser'] = $this->getToUserList($to_user);
+		if (($tmp = $this->getToList($to_party)) != FALSE) {
+			$data['toparty'] = $tmp;
 		}
-		if (!empty($to_party) && is_array($to_party)) {
-			$first = TRUE;
-			foreach ($to_party as $value) {
-				if ($first) {
-					$data['toparty'] = $value;
-				} else {
-					$data['toparty'] .= "|" . $value;
-				}
-			}
-		}
-		if (!empty($to_tag) && is_array($to_tag) && $data['touser'] != "@all") {
-			$first = TRUE;
-			foreach ($to_tag as $value) {
-				if ($first) {
-					$data['totag'] = $value;
-				} else {
-					$data['totag'] .= "|" . $value;
-				}
-			}
+		if (($tmp = $this->getToList($to_tag)) != FALSE) {
+			$data['totag'] = $tmp;
 		}
 		if (intval($safe) == 1) {
 			$data['safe'] = 1;
@@ -448,37 +348,12 @@ class SendMessage {
 				break;
 		}
 		$data['msgtype'] = $msg_type;
-		if (is_array($to_user)) {
-			$first = TRUE;
-			foreach ($to_user as $value) {
-				if ($first) {
-					$data['touser'] = $value;
-				} else {
-					$data['touser'] .= "|" . $value;
-				}
-			}
-		} else {
-			$data['touser'] = $to_user;
+		$data['touser'] = $this->getToUserList($to_user);
+		if (($tmp = $this->getToList($to_party)) != FALSE) {
+			$data['toparty'] = $tmp;
 		}
-		if (!empty($to_party) && is_array($to_party)) {
-			$first = TRUE;
-			foreach ($to_party as $value) {
-				if ($first) {
-					$data['toparty'] = $value;
-				} else {
-					$data['toparty'] .= "|" . $value;
-				}
-			}
-		}
-		if (!empty($to_tag) && is_array($to_tag) && $data['touser'] != "@all") {
-			$first = TRUE;
-			foreach ($to_tag as $value) {
-				if ($first) {
-					$data['totag'] = $value;
-				} else {
-					$data['totag'] .= "|" . $value;
-				}
-			}
+		if (($tmp = $this->getToList($to_tag)) != FALSE) {
+			$data['totag'] = $tmp;
 		}
 		if (intval($safe) == 1) {
 			$data['safe'] = 1;
@@ -486,6 +361,50 @@ class SendMessage {
 
 		$result = $this -> tools -> httpRequest($this -> url, $data, 'post');
 		return $result;
+	}
+	
+	/**
+	 * 根据成员ID列表返回微信需要的成员列表格式字符串
+	 * @param $to_user 成员ID列表，一维数组传递['1', '2', ...]，最多1000个，默认发送给全部成员
+	 */
+	private function getToUserList($to_user = "@all") {
+		$data = "";
+		if (is_array($to_user)) {
+			$first = TRUE;
+			foreach ($to_user as $value) {
+				if ($first) {
+					$data = $value;
+					$first = FALSE;
+				} else {
+					$data .= "|" . $value;
+				}
+			}
+		} else {
+			$data = $to_user;
+		}
+		return $data;
+	}
+	
+	/**
+	 * 根据传入的数组，返回微信需要的列表格式字符串
+	 * @param $to_list 一维数组传递['1', '2', ...]，最多1000个
+	 */
+	private function getToList($to_list = array()) {
+		$data = "";
+		if (!empty($to_list) && is_array($to_list)) {
+			$first = TRUE;
+			foreach ($to_list as $value) {
+				if ($first) {
+					$data = $value;
+					$first = FALSE;
+				} else {
+					$data .= "|" . $value;
+				}
+			}
+		}else {
+			$data = FALSE;
+		}
+		return $data;
 	}
 
 }
